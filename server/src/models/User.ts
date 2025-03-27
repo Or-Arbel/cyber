@@ -1,6 +1,14 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Document } from "mongoose";
 
-const userSchema = new Schema({
+export interface IUser extends Document {
+    name: string,
+    email: string,
+    linkedin?: string,
+    image?: string,
+    unit: string
+}
+
+const userSchema = new Schema<IUser>({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     linkedin: { type: String, unique: true },
@@ -8,4 +16,4 @@ const userSchema = new Schema({
     unit: { type: String, required: true },
 });
 
-module.exports = model("User", userSchema);
+export default model<IUser>("User", userSchema);
