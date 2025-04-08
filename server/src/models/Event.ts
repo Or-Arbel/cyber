@@ -1,24 +1,33 @@
-import { model, Schema, Document } from 'mongoose';
-export interface IEvent extends Document {
-  startDateTime: Date;
-  endDateTime: Date;
-  allDay: boolean;
-  location: string;
-  title: string;
-  description?: string;
-}
+import mongoose, { Schema, Document } from 'mongoose';
+import { IEvent } from '../types/index';
 
 const eventSchema = new Schema<IEvent>({
-  startDateTime: { type: Date, required: true },
-  endDateTime: { type: Date, required: true },
+  title: {
+    type: String,
+    required: true
+  },
+  startDateTime: {
+    type: Date,
+    required: true
+  },
+  endDateTime: {
+    type: Date,
+    required: true
+  },
+  location: {
+    type: String,
+    required: true
+  },
   allDay: {
     type: Boolean,
-    default: false,
     required: true,
+    default: false
   },
-  location: { type: String, required: true },
-  title: { type: String, required: true },
-  description: { type: String },
+  description: String,
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-export default model<IEvent>('Event', eventSchema);
+export default mongoose.model<IEvent>('Event', eventSchema);

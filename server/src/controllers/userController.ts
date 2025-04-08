@@ -1,70 +1,30 @@
 import { Request, Response } from 'express';
-import * as UserService from '../services/userService';
+import * as userService from '../services/userService';
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const register = async (req: Request, res: Response) => {
   try {
-    const users = await UserService.getAllUsers();
-    res.json(users);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'An unknown error occurred' });
-    }
-  }
-};
-
-export const getUserById = async (req: Request, res: Response) => {
-  try {
-    const user = await UserService.getUserById(req.params.id);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    res.json(user);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'An unknown error occurred' });
-    }
-  }
-};
-
-export const createUser = async (req: Request, res: Response) => {
-  try {
-    const user = await UserService.createUser(req.body);
+    const user = await userService.createUser(req.body);
     res.status(201).json(user);
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'An unknown error occurred' });
-    }
+    res.status(400).json({ message: (error as Error).message });
   }
 };
 
-export const updateUser = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
-    const user = await UserService.updateUser(req.params.id, req.body);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    res.json(user);
+    const { email, password } = req.body;
+    const { token, user } = await userService.authenticateUser(email, password);
+    res.json({ token, user });
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'An unknown error occurred' });
-    }
+    res.status(401).json({ message: (error as Error).message });
   }
 };
 
-export const deleteUser = async (req: Request, res: Response) => {
+export const getUsers = async (_req: Request, res: Response) => {
   try {
-    const user = await UserService.deleteUser(req.params.id);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    res.json({ message: 'User deleted successfully' });
+    const users = await userService.getUsers();
+    res.json(users);
   } catch (error) {
-    if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
-    } else {
-      res.status(500).json({ message: 'An unknown error occurred' });
-    }
+    res.status(500).json({ message: (error as Error).message });
   }
 };
