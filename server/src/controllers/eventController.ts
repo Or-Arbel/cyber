@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as eventService from '../services/eventService';
-import { IEvent } from '../types/index.js';
 
 export const createEvent = async (req: Request, res: Response) => {
   try {
